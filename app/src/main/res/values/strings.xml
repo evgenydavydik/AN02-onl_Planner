@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AN02ONL_PlannerApp</string>
+    <string name="welcome">Welcome</string>
+    <string name="click_me">Click Me</string>
+    <string name="click_me_clone">Click Me Clone</string>
+    <string name="click_summ">Click Summ</string>
+</resources>
