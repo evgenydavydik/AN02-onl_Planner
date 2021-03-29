@@ -3,7 +3,7 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
 
 class MainViewModel : CoroutineViewModel() {
-    val notes = listOf(
+    var notes = mutableListOf(
             Note("Помыть посуду"),
             Note("Забрать пальто из химчистки", "23.03.2021"),
             Note("Позвонить Ибрагиму"),
