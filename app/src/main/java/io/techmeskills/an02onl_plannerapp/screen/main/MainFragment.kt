@@ -18,11 +18,16 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding.buttonClick.setOnClickListener {
-            viewModel.notes.add(Note(viewBinding.editText.text.toString()))
-            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(viewModel.notes)
+            viewModel.text = viewBinding.editText.text.toString()
+            viewModel.doClickButton()
+            viewModel.listLifeData.observe(this.viewLifecycleOwner, {
+                viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it)
+            })
         }
 
-        viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(viewModel.notes)
+        viewModel.listLifeData.observe(this.viewLifecycleOwner, {
+            viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it)
+        })
     }
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
