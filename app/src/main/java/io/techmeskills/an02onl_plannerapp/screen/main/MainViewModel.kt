@@ -1,9 +1,15 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
+import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainViewModel : CoroutineViewModel() {
-    var notes = mutableListOf(
+    var text: String = ""
+
+    private val notes = mutableListOf(
             Note("Помыть посуду"),
             Note("Забрать пальто из химчистки", "23.03.2021"),
             Note("Позвонить Ибрагиму"),
@@ -17,6 +23,20 @@ class MainViewModel : CoroutineViewModel() {
             Note("Скачать кино в самолёт", "25.03.2021")
     )
 
+    val listLifeData = MutableLiveData<List<Note>>(notes)
+
+
+    fun doClickButton() {
+        launch {
+            addNote(text)
+            listLifeData.postValue(notes)
+        }
+    }
+
+
+    private suspend fun addNote(text: String) {
+        notes.add(Note(text))
+    }
 }
 
 class Note(
