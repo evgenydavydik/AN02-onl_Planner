@@ -20,9 +20,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         viewBinding.buttonClick.setOnClickListener {
             viewModel.text = viewBinding.editText.text.toString()
             viewModel.doClickButton()
-            viewModel.listLifeData.observe(this.viewLifecycleOwner, {
-                viewBinding.recyclerView.adapter = NotesRecyclerViewAdapter(it)
-            })
+            viewBinding.editText.setText("")
         }
 
         viewModel.listLifeData.observe(this.viewLifecycleOwner, {
