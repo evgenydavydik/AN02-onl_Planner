@@ -58,7 +58,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                     override fun onItemClick(view: View, position: Int) {
                         view.findNavController().navigate(R.id.addNoteFragment)
                         positions = position
-                        //Toast.makeText(activity, "$position item clicked!", Toast.LENGTH_LONG).show()
+                        //Toast.makeText(activity, "$position item clicked!", Toast.LENGTH_LONG).show() asda
                     }
                 }))
 
