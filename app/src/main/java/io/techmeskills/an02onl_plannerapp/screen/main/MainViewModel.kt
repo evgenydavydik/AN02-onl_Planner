@@ -37,6 +37,13 @@ class MainViewModel : CoroutineViewModel() {
         }
     }
 
+    fun remoteNote(position: Int){
+        launch {
+            notes.removeAt(position)
+            listLifeData.postValue(notes)
+        }
+    }
+
 }
 
 class Note(

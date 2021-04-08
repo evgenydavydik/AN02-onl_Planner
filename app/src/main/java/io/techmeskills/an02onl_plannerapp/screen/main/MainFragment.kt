@@ -54,13 +54,18 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         }
 
         viewBinding.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(this.viewBinding.recyclerView,
-                object : RecyclerItemClickListener.OnItemClickListener {
-                    override fun onItemClick(view: View, position: Int) {
-                        view.findNavController().navigate(R.id.addNoteFragment)
-                        positions = position
-                        //Toast.makeText(activity, "$position item clicked!", Toast.LENGTH_LONG).show() asda
-                    }
-                }))
+            object : RecyclerItemClickListener.OnItemClickListener {
+                override fun onLongItemClick(child: View, position: Int) {
+                     viewModel.remoteNote(position)
+                }
+
+                override fun onItemClick(view: View, position: Int) {
+                    view.findNavController().navigate(R.id.addNoteFragment)
+                    positions = position
+                }
+            }))
+
+        //
 
     }
 
