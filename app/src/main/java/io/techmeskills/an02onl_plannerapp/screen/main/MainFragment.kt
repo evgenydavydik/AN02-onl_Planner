@@ -2,19 +2,19 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
 import io.techmeskills.an02onl_plannerapp.screen.add_note.AddNoteFragment
-import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
-import io.techmeskills.an02onl_plannerapp.support.RecyclerItemClickListener
-import io.techmeskills.an02onl_plannerapp.support.setVerticalMargin
+import io.techmeskills.an02onl_plannerapp.support.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_main) {
 
@@ -54,19 +54,24 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         }
 
         viewBinding.recyclerView.addOnItemTouchListener(RecyclerItemClickListener(this.viewBinding.recyclerView,
-            object : RecyclerItemClickListener.OnItemClickListener {
-                override fun onLongItemClick(child: View, position: Int) {
-                     viewModel.remoteNote(position)
-                }
+                object : RecyclerItemClickListener.OnItemClickListener {
+                    override fun onLongItemClick(child: View, position: Int) {
+                        viewModel.remoteNote(position)
+                    }
 
-                override fun onItemClick(view: View, position: Int) {
-                    view.findNavController().navigate(R.id.addNoteFragment)
-                    positions = position
-                }
-            }))
+                    override fun onItemClick(view: View, position: Int) {
+                        view.findNavController().navigate(R.id.addNoteFragment)
+                        positions = position
+                    }
+                }))
 
-        //
-
+        val swipeHandler = object : SwipeToDeleteCallback(this.requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                viewModel.remoteNote(viewHolder.adapterPosition)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
     }
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {

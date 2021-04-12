@@ -38,19 +38,19 @@ open class RecyclerItemClickListener(recyclerView: RecyclerView, private val mLi
     inline fun RecyclerView.onLongItemClick(crossinline action: (position: Int) -> Unit) = setOnItemClickListener(onLongClick = action)
 
     inline fun RecyclerView.setOnItemClickListener(
-        crossinline onClick: (position: Int) -> Unit = {},
-        crossinline onLongClick: (position: Int) -> Unit = {}) {
+            crossinline onClick: (position: Int) -> Unit = {},
+            crossinline onLongClick: (position: Int) -> Unit = {}) {
 
         addOnItemTouchListener(RecyclerItemClickListener(this,
-            object : RecyclerItemClickListener.OnItemClickListener {
-                override fun onLongItemClick(child: View, position: Int) {
-                    onLongClick(position)
-                }
+                object : RecyclerItemClickListener.OnItemClickListener {
+                    override fun onLongItemClick(child: View, position: Int) {
+                        onLongClick(position)
+                    }
 
-                override fun onItemClick(view: View, position: Int) {
-                    onClick(position)
-                }
-            }))
+                    override fun onItemClick(view: View, position: Int) {
+                        onClick(position)
+                    }
+                }))
     }
 
     override fun onInterceptTouchEvent(view: RecyclerView, e: MotionEvent): Boolean {
