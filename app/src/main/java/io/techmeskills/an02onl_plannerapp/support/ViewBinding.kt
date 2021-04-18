@@ -11,9 +11,9 @@ interface ViewBindable<T : ViewBinding> {
 }
 
 inline fun <reified T : ViewBinding> ViewGroup.viewBinding(method: KCallable<*>): Lazy<T> =
-    lazy(LazyThreadSafetyMode.NONE) {
-        method.call(LayoutInflater.from(context), this) as T
-    }
+        lazy(LazyThreadSafetyMode.NONE) {
+            method.call(LayoutInflater.from(context), this) as T
+        }
 
 abstract class BindingViewHolder<T : ViewBinding>(override val viewBinding: T) :
-    RecyclerView.ViewHolder(viewBinding.root), ViewBindable<T>
+        RecyclerView.ViewHolder(viewBinding.root), ViewBindable<T>

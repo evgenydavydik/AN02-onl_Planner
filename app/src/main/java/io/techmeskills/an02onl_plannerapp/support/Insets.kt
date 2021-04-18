@@ -21,7 +21,7 @@ data class VerticalInset(val top: Int, val bottom: Int, val hasKeyboard: Boolean
 }
 
 fun Dialog.setWindowTransparency(
-    listener: OnSystemBarsSizeChangedListener
+        listener: OnSystemBarsSizeChangedListener
 ) {
     window?.decorView?.overrideSystemInsets(listener)
     window?.navigationBarColor = Color.TRANSPARENT
@@ -29,7 +29,7 @@ fun Dialog.setWindowTransparency(
 }
 
 fun Activity.setWindowTransparency(
-    listener: OnSystemBarsSizeChangedListener
+        listener: OnSystemBarsSizeChangedListener
 ) {
     window.decorView.overrideSystemInsets(listener)
     window.navigationBarColor = Color.TRANSPARENT
@@ -40,26 +40,26 @@ fun View.overrideSystemInsets(listener: OnSystemBarsSizeChangedListener) {
     ViewCompat.setOnApplyWindowInsetsListener(this) { _, insets ->
 
         val desiredBottomInset = calculateDesiredBottomInset(
-            this,
-            insets.systemWindowInsetTop,
-            insets.systemWindowInsetBottom,
-            listener
+                this,
+                insets.systemWindowInsetTop,
+                insets.systemWindowInsetBottom,
+                listener
         )
 
         ViewCompat.onApplyWindowInsets(
-            this,
-            WindowInsetsCompat.Builder(insets)
-                .setSystemWindowInsets(Insets.of(0, 0, 0, desiredBottomInset))
-                .build()
+                this,
+                WindowInsetsCompat.Builder(insets)
+                        .setSystemWindowInsets(Insets.of(0, 0, 0, desiredBottomInset))
+                        .build()
         )
     }
 }
 
 fun calculateDesiredBottomInset(
-    view: View,
-    topInset: Int,
-    bottomInset: Int,
-    listener: OnSystemBarsSizeChangedListener
+        view: View,
+        topInset: Int,
+        bottomInset: Int,
+        listener: OnSystemBarsSizeChangedListener
 ): Int {
     val hasKeyboard = view.isKeyboardAppeared(bottomInset)
     val desiredBottomInset = if (hasKeyboard) bottomInset else 0
@@ -72,4 +72,4 @@ fun calculateDesiredBottomInset(
 }
 
 private fun View.isKeyboardAppeared(bottomInset: Int) =
-    bottomInset / resources.displayMetrics.heightPixels.toDouble() > .25
+        bottomInset / resources.displayMetrics.heightPixels.toDouble() > .25
