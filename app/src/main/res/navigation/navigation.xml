@@ -21,15 +21,20 @@
         android:label="MainFragment"
         tools:layout="@layout/fragment_main">
         <action
-            android:id="@+id/toAddNoteFragment"
-            app:destination="@+id/addNoteFragment" />
+            android:id="@+id/toNoteDetails"
+            app:destination="@+id/noteDetailsFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/addNoteFragment"
-        android:name="io.techmeskills.an02onl_plannerapp.screen.add_note.AddNoteFragment"
-        android:label="AddNoteFragment"
-        tools:layout="@layout/fragment_add_note" />
+        android:id="@+id/noteDetailsFragment"
+        android:name="io.techmeskills.an02onl_plannerapp.screen.note_details.NoteDetailsFragment"
+        android:label="NoteDetailsFragment"
+        tools:layout="@layout/fragment_note_details">
+        <argument
+            android:name="note"
+            app:argType="io.techmeskills.an02onl_plannerapp.models.Note"
+            app:nullable="true" />
+    </fragment>
 
 
 </navigation>
