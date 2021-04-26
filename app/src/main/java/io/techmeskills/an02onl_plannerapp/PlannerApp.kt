@@ -5,6 +5,7 @@ import io.techmeskills.an02onl_plannerapp.cloud.ApiCloud
 import io.techmeskills.an02onl_plannerapp.database.DatabaseConstructor
 import io.techmeskills.an02onl_plannerapp.database.PlannerDatabase
 import io.techmeskills.an02onl_plannerapp.datastore.AppSettings
+import io.techmeskills.an02onl_plannerapp.repositories.CloudRepository
 import io.techmeskills.an02onl_plannerapp.repositories.NotesRepository
 import io.techmeskills.an02onl_plannerapp.repositories.UsersRepository
 import io.techmeskills.an02onl_plannerapp.screen.login.LoginFragment
@@ -22,12 +23,12 @@ class PlannerApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@PlannerApp)
-            modules(listOf(viewModels, storageModule, repositoryModule))
+            modules(listOf(viewModels, storageModule, repositoryModule, cloudModule))
         }
     }
 
     private val viewModels = module {
-        viewModel { MainViewModel(get(), get(),get()) }
+        viewModel { MainViewModel(get(), get(), get()) }
         viewModel { NoteDetailsViewModel(get()) }
         viewModel { LoginViewModel(get()) }
     }
@@ -39,8 +40,9 @@ class PlannerApp : Application() {
         single { AppSettings(get()) }
     }
     private val repositoryModule = module {
-        factory { UsersRepository(get(), get(),get()) }
+        factory { UsersRepository(get(), get(), get()) }
         factory { NotesRepository(get(), get()) }
+        factory { CloudRepository(get(), get(), get()) }
     }
 
     private val cloudModule = module {
