@@ -24,7 +24,7 @@ class UsersRepository(
     suspend fun login(userName: String) {
         withContext(Dispatchers.IO) {
             if (checkUserExists(userName).not()) {
-                val userId = usersDao.newUser(User(name = userName))
+                val userId = usersDao.saveUser(User(name = userName))
                 appSettings.setUserId(userId)
             } else {
                 val userId = usersDao.getUserId(userName)
