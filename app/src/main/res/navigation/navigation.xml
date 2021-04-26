@@ -11,6 +11,16 @@
         android:label="SplashFragment"
         tools:layout="@layout/fragment_splash">
         <action
+            android:id="@+id/toLoginFragment"
+            app:destination="@+id/loginFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="io.techmeskills.an02onl_plannerapp.screen.login.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
             android:id="@+id/toMainFragment"
             app:destination="@+id/mainFragment" />
     </fragment>
@@ -23,6 +33,9 @@
         <action
             android:id="@+id/toNoteDetails"
             app:destination="@+id/noteDetailsFragment" />
+        <action
+            android:id="@+id/toLoginFragment"
+            app:destination="@+id/loginFragment"/>
     </fragment>
 
     <fragment

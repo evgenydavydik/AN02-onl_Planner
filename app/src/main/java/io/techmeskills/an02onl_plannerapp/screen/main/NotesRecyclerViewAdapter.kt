@@ -3,7 +3,9 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,24 +13,24 @@ import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.models.Note
 
 class NotesRecyclerViewAdapter(
-        private val onClick: (Note) -> Unit,
-        private val onDelete: (Note) -> Unit,
-        private val onAddNew: () -> Unit
+    private val onClick: (Note) -> Unit,
+    private val onDelete: (Note) -> Unit,
+    private val onAddNew: () -> Unit
 ) : ListAdapter<Note, RecyclerView.ViewHolder>(NoteAdapterDiffCallback()) {
 
 
     override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
+        parent: ViewGroup,
+        viewType: Int
     ): RecyclerView.ViewHolder = when (viewType) {
         ADD_NEW_VIEW_TYPE -> AddNewViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.note_list_item_add, parent, false),
-                onAddNew
+            LayoutInflater.from(parent.context).inflate(R.layout.note_list_item_add, parent, false),
+            onAddNew
         )
         else -> NoteViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.note_list_item, parent, false),
-                ::onItemClick,
-                ::onItemDelete
+            LayoutInflater.from(parent.context).inflate(R.layout.note_list_item, parent, false),
+            ::onItemClick,
+            ::onItemDelete
         )
     }
 
@@ -55,13 +57,14 @@ class NotesRecyclerViewAdapter(
     }
 
     inner class NoteViewHolder(
-            itemView: View,
-            private val onItemClick: (Int) -> Unit,
-            private val onItemDelete: (Int) -> Unit
+        itemView: View,
+        private val onItemClick: (Int) -> Unit,
+        private val onItemDelete: (Int) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         private val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
         private val tvDate = itemView.findViewById<TextView>(R.id.tvDate)
+        private val ivCloud = itemView.findViewById<ImageView>(R.id.ivCloud)
 
         init {
             itemView.setOnClickListener {
@@ -76,12 +79,13 @@ class NotesRecyclerViewAdapter(
         fun bind(item: Note) {
             tvTitle.text = item.title
             tvDate.text = item.date
+            ivCloud.isVisible = item.fromCloud
         }
     }
 
     inner class AddNewViewHolder(
-            itemView: View,
-            private val onItemClick: () -> Unit
+        itemView: View,
+        private val onItemClick: () -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
 
         init {
@@ -105,7 +109,7 @@ class NoteAdapterDiffCallback : DiffUtil.ItemCallback<Note>() {
     }
 
     override fun areContentsTheSame(oldItem: Note, newItem: Note): Boolean {
-        return oldItem.date == newItem.date && oldItem.title == newItem.title
+        return oldItem.date == newItem.date && oldItem.title == newItem.title && oldItem.fromCloud == newItem.fromCloud
     }
 }
 
