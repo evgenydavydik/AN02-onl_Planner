@@ -1,26 +1,57 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import io.techmeskills.an02onl_plannerapp.database.dao.NotesDao
+import io.techmeskills.an02onl_plannerapp.database.dao.UsersDao
 import io.techmeskills.an02onl_plannerapp.models.Note
+import io.techmeskills.an02onl_plannerapp.repositories.CloudRepository
+import io.techmeskills.an02onl_plannerapp.repositories.NotesRepository
+import io.techmeskills.an02onl_plannerapp.repositories.UsersRepository
 import io.techmeskills.an02onl_plannerapp.support.CoroutineViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class MainViewModel(private val notesDao: NotesDao) : CoroutineViewModel() {
+class MainViewModel(
+    private val notesRepository: NotesRepository,
+    private val usersRepository: UsersRepository,
+    private val cloudRepository: CloudRepository
+) : CoroutineViewModel() {
 
-    val notesLiveData = notesDao.getAllNotesLiveData().map {
+    val progressLiveData = MutableLiveData<Boolean>()
+    val notesLiveData = notesRepository.currentNotesFlow.flowOn(Dispatchers.IO).map {
         listOf(AddNewNote) + it
-    }
+    }.flowOn(Dispatchers.IO).asLiveData()
 
     fun deleteNote(note: Note) {
         launch {
-            notesDao.deleteNote(note)
+            notesRepository.deleteNote(note)
         }
+    }
+
+    fun logout() {
+        launch {
+            usersRepository.logout()
+        }
+    }
+
+    fun exportNotes() = launch {
+        val result = cloudRepository.exportNotes()
+        progressLiveData.postValue(result)
+    }
+
+    fun importNotes() = launch {
+        val result = cloudRepository.importNotes()
+        progressLiveData.postValue(result)
     }
 }
 
-object AddNewNote : Note(-1, "", "")
+object AddNewNote : Note(-1, "", "", -1)
 
 
 

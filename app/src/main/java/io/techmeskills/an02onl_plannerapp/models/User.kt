@@ -6,11 +6,8 @@ import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-@Entity(tableName = "notes")
-open class Note(
+@Entity(tableName = "users")
+open class User(
         @PrimaryKey(autoGenerate = true) val id: Long = 0L,
-        val title: String,
-        val date: String,
-        val userId: Long = -1,
-        val fromCloud: Boolean = false
+        val name: String
 ) : Parcelable

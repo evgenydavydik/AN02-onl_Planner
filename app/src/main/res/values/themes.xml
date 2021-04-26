@@ -28,7 +28,7 @@
     </style>
 
     <style name="DatePickerStyle">
-        <item name="colorAccent">@color/purple_500</item>
-        <item name="colorControlActivated">@color/purple_700</item>
+        <item name="colorAccent">@color/royal_blue</item>
+        <item name="colorControlActivated">@color/royal_blue</item>
     </style>
 </resources>

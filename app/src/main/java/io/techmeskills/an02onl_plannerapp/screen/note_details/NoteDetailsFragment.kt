@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class NoteDetailsFragment :
-    NavigationFragment<FragmentNoteDetailsBinding>(R.layout.fragment_note_details) {
+        NavigationFragment<FragmentNoteDetailsBinding>(R.layout.fragment_note_details) {
 
     private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
@@ -34,24 +34,25 @@ class NoteDetailsFragment :
             if (viewBinding.etNote.text.isNotBlank()) {
                 args.note?.let { //если note != null, то это обновление заметки
                     viewModel.updateNote(
-                        Note(
-                            id = it.id, //при обновлении надо указать id, чтобы база знала что обновлять
-                            title = viewBinding.etNote.text.toString(),
-                            date = dateFormatter.format(viewBinding.tvDate.getSelectedDate())
-                        )
+                            Note(
+                                    id = it.id, //при обновлении надо указать id, чтобы база знала что обновлять
+                                    title = viewBinding.etNote.text.toString(),
+                                    date = dateFormatter.format(viewBinding.tvDate.getSelectedDate()),
+                                    userId = it.userId
+                            )
                     )
                 } ?: kotlin.run { //если note == null, то это новая заметка, и мы ее добавляем
                     viewModel.addNewNote(
-                        Note( //при добавлении id можно не указывать
-                            title = viewBinding.etNote.text.toString(),
-                            date = dateFormatter.format(viewBinding.tvDate.getSelectedDate())
-                        )
+                            Note( //при добавлении id можно не указывать
+                                    title = viewBinding.etNote.text.toString(),
+                                    date = dateFormatter.format(viewBinding.tvDate.getSelectedDate())
+                            )
                     )
                 }
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(requireContext(), " Please, enter your note", Toast.LENGTH_LONG)
-                    .show()
+                        .show()
             }
         }
 

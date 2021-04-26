@@ -34,7 +34,7 @@ class SplashFragment : NavigationFragment<FragmentSplashBinding>(R.layout.fragme
         val myImageView : ImageView = viewBinding.root.findViewById(R.id.ic_splash);
         myImageView.startAnimation(animationRotateCenter)
         viewBinding.root.postDelayed({
-            findNavController().navigateSafe(SplashFragmentDirections.toMainFragment())
+            findNavController().navigateSafe(SplashFragmentDirections.toLoginFragment())
         }, 5000)
     }
 
