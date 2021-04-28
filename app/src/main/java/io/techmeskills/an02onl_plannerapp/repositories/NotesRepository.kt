@@ -4,8 +4,7 @@ import io.techmeskills.an02onl_plannerapp.database.dao.NotesDao
 import io.techmeskills.an02onl_plannerapp.datastore.AppSettings
 import io.techmeskills.an02onl_plannerapp.models.Note
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 
 class NotesRepository(private val notesDao: NotesDao, private val appSettings: AppSettings) {
@@ -42,6 +41,24 @@ class NotesRepository(private val notesDao: NotesDao, private val appSettings: A
         withContext(Dispatchers.IO) {
             notesDao.updateNote(note)
         }
+    }
+
+    suspend fun checkImportedNote(notes: MutableList<Note>): List<Note> {
+        withContext(Dispatchers.IO) {
+            val notesDB = notesDao.getAllNotesByUserId(notes[0].userId)
+            for (noteDB in notesDB){
+                for (noteCloud in notes){
+                    if(noteCloud.title==noteDB.title){
+                        notes.remove(noteCloud)
+                        break
+                    }
+                }
+                if (notes.isEmpty()){
+                    break
+                }
+            }
+        }
+        return notes.toList()
     }
 
     suspend fun deleteNote(note: Note) {
