@@ -38,7 +38,7 @@ class CloudRepository(
                 fromCloud = true
             )
         }
-        notesRepository.saveNotes(notes)
+        notesRepository.saveNotes(notesRepository.checkImportedNote(notes.toMutableList(), user.id))
         return response.isSuccessful
     }
 }
