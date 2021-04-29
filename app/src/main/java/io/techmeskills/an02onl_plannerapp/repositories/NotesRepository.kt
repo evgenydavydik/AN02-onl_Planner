@@ -9,15 +9,18 @@ import kotlinx.coroutines.withContext
 
 class NotesRepository(private val notesDao: NotesDao, private val appSettings: AppSettings) {
 
-    val currentNotesFlow: Flow<List<Note>> = appSettings.userIdFlow().flatMapLatest { userId -> notesDao.getCurrentNotesLiveFlow(userId) }
+    val currentNotesFlow: Flow<List<Note>> = appSettings.userIdFlow()
+        .flatMapLatest { userId -> notesDao.getCurrentNotesLiveFlow(userId) }
 
     suspend fun saveNote(note: Note) {
         withContext(Dispatchers.IO) {
-            notesDao.saveNote(Note(
+            notesDao.saveNote(
+                Note(
                     title = note.title,
                     date = note.date,
                     userId = appSettings.userId()
-            ))
+                )
+            )
         }
     }
 
@@ -43,18 +46,18 @@ class NotesRepository(private val notesDao: NotesDao, private val appSettings: A
         }
     }
 
-    suspend fun checkImportedNote(notes: MutableList<Note>): List<Note> {
+    suspend fun checkImportedNote(notes: MutableList<Note>, userId: Long): List<Note> {
         withContext(Dispatchers.IO) {
-            val notesDB = notesDao.getAllNotesByUserId(notes[0].userId)
-            for (noteDB in notesDB){
-                for (noteCloud in notes){
-                    if(noteCloud.title==noteDB.title){
+            val notesDB = notesDao.getAllNotesByUserId(userId)
+            for (noteDB in notesDB) {
+                if (notes.isEmpty()) {
+                    break
+                }
+                for (noteCloud in notes) {
+                    if (noteCloud.title == noteDB.title && noteCloud.date == noteDB.date) {
                         notes.remove(noteCloud)
                         break
                     }
-                }
-                if (notes.isEmpty()){
-                    break
                 }
             }
         }
