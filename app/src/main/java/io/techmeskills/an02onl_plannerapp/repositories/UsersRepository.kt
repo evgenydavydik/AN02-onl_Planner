@@ -24,11 +24,11 @@ class UsersRepository(
     suspend fun login(userName: String) {
         withContext(Dispatchers.IO) {
             if (checkUserExists(userName).not()) {
-                val userId = usersDao.saveUser(User(name = userName))
-                appSettings.setUserId(userId)
+                usersDao.saveUser(User(name = userName))
+                appSettings.setUserName(userName)
             } else {
-                val userId = usersDao.getUserId(userName)
-                appSettings.setUserId(userId)
+                usersDao.getUserId(userName)
+                appSettings.setUserName(userName)
             }
         }
     }
@@ -39,16 +39,23 @@ class UsersRepository(
         }
     }
 
-    fun getCurrentUserFlow(): Flow<User> = appSettings.userIdFlow().flatMapLatest {
+    fun getCurrentUserFlow(): Flow<User> = appSettings.userNameFlow().flatMapLatest {
         usersDao.getById(it)
     }
 
     fun checkUserLoggedIn(): Flow<Boolean> =
-        appSettings.userIdFlow().map { it >= 0 }.flowOn(Dispatchers.IO)
+        appSettings.userNameFlow().map { it.isNotEmpty() }.flowOn(Dispatchers.IO)
 
     suspend fun logout() {
         withContext(Dispatchers.IO) {
-            appSettings.setUserId(-1L)
+            appSettings.setUserName("")
+        }
+    }
+
+    suspend fun deleteUser(){
+        withContext(Dispatchers.IO){
+            usersDao.deleteUser(User(appSettings.userName()))
+            logout()
         }
     }
 

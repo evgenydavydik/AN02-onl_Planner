@@ -40,6 +40,12 @@ class MainViewModel(
         }
     }
 
+    fun deleteUser() {
+        launch {
+            usersRepository.deleteUser()
+        }
+    }
+
     fun exportNotes() = launch {
         val result = cloudRepository.exportNotes()
         progressLiveData.postValue(result)
@@ -51,7 +57,7 @@ class MainViewModel(
     }
 }
 
-object AddNewNote : Note(-1, "", "", -1)
+object AddNewNote : Note(-1, "", "", "")
 
 
 

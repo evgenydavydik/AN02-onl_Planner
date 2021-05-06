@@ -9,8 +9,8 @@ import kotlinx.coroutines.withContext
 
 class NotesRepository(private val notesDao: NotesDao, private val appSettings: AppSettings) {
 
-    val currentNotesFlow: Flow<List<Note>> = appSettings.userIdFlow()
-        .flatMapLatest { userId -> notesDao.getCurrentNotesLiveFlow(userId) }
+    val currentNotesFlow: Flow<List<Note>> = appSettings.userNameFlow()
+        .flatMapLatest { userName -> notesDao.getCurrentNotesLiveFlow(userName) }
 
     suspend fun saveNote(note: Note) {
         withContext(Dispatchers.IO) {
@@ -18,14 +18,14 @@ class NotesRepository(private val notesDao: NotesDao, private val appSettings: A
                 Note(
                     title = note.title,
                     date = note.date,
-                    userId = appSettings.userId()
+                    userName = appSettings.userName()
                 )
             )
         }
     }
 
     suspend fun getCurrentUserNotes(): List<Note> {
-        return notesDao.getAllNotesByUserId(appSettings.userId())
+        return notesDao.getAllNotesByUserId(appSettings.userName())
     }
 
     suspend fun setAllNotesSyncWithCloud() {
@@ -46,9 +46,9 @@ class NotesRepository(private val notesDao: NotesDao, private val appSettings: A
         }
     }
 
-    suspend fun checkImportedNote(notes: MutableList<Note>, userId: Long): List<Note> {
+    suspend fun checkImportedNote(notes: MutableList<Note>, userName: String): List<Note> {
         withContext(Dispatchers.IO) {
-            val notesDB = notesDao.getAllNotesByUserId(userId)
+            val notesDB = notesDao.getAllNotesByUserId(userName)
             for (noteDB in notesDB) {
                 if (notes.isEmpty()) {
                     break

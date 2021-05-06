@@ -23,11 +23,11 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
     private val viewModel: MainViewModel by viewModel()
 
     private val adapter = NotesRecyclerViewAdapter(
-            onClick = ::onItemClick,
-            onDelete = ::onItemDelete,
-            onAddNew = {
-                findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(null))
-            }
+        onClick = ::onItemClick,
+        onDelete = ::onItemDelete,
+        onAddNew = {
+            findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(null))
+        }
     )
 
     private fun onItemClick(note: Note) {
@@ -61,6 +61,10 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             showCloudDialog()
         }
 
+        viewBinding.ivSettings.setOnClickListener {
+            showSettingsDialog()
+        }
+
         viewModel.progressLiveData.observe(this.viewLifecycleOwner) { success ->
             if (success.not()) {
                 Toast.makeText(requireContext(), R.string.cloud_failed, Toast.LENGTH_LONG)
@@ -68,6 +72,23 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             }
             viewBinding.progressIndicator.isVisible = false
         }
+    }
+
+    private fun showSettingsDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.settings_request_title)
+            .setMessage(R.string.setting_action)
+            .setPositiveButton(R.string.action_logout) { dialog, _ ->
+                viewBinding.progressIndicator.isVisible = true
+                viewModel.logout()
+                dialog.cancel()
+                findNavController().navigateSafe(MainFragmentDirections.toLoginFragment())
+            }.setNegativeButton(R.string.action_delete_user) { dialog, _ ->
+                viewBinding.progressIndicator.isVisible = true
+                viewModel.deleteUser()
+                dialog.cancel()
+                findNavController().navigateSafe(MainFragmentDirections.toLoginFragment())
+            }.show()
     }
 
     private fun showCloudDialog() {

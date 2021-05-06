@@ -15,7 +15,7 @@ class CloudRepository(
     suspend fun exportNotes(): Boolean {
         val user = userRepository.getCurrentUserFlow().first()
         val notes = notesRepository.getCurrentUserNotes()
-        val cloudUser = CloudUser(userId = user.id, userName = user.name)
+        val cloudUser = CloudUser(userName = user.name)
         val cloudNotes = notes.map { CloudNote(id = it.id, title = it.title, date = it.date) }
         val exportRequestBody =
             ExportNotesRequestBody(cloudUser, userRepository.phoneId, cloudNotes)
@@ -34,11 +34,11 @@ class CloudRepository(
             Note(
                 title = cloudNote.title,
                 date = cloudNote.date,
-                userId = user.id,
+                userName = user.name,
                 fromCloud = true
             )
         }
-        notesRepository.saveNotes(notesRepository.checkImportedNote(notes.toMutableList(), user.id))
+        notesRepository.saveNotes(notesRepository.checkImportedNote(notes.toMutableList(), user.name))
         return response.isSuccessful
     }
 }
