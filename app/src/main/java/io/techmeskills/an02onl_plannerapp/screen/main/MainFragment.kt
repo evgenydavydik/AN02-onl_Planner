@@ -24,10 +24,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
 
     private val adapter = NotesRecyclerViewAdapter(
         onClick = ::onItemClick,
-        onDelete = ::onItemDelete,
-        onAddNew = {
-            findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(null))
-        }
+        onDelete = ::onItemDelete
     )
 
     private fun onItemClick(note: Note) {
@@ -53,16 +50,16 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
 
-        viewBinding.btLogout.setOnClickListener {
-            viewModel.logout()
-            findNavController().navigateSafe(MainFragmentDirections.toLoginFragment())
-        }
         viewBinding.ivCloud.setOnClickListener {
             showCloudDialog()
         }
 
         viewBinding.ivSettings.setOnClickListener {
             showSettingsDialog()
+        }
+
+        viewBinding.addNote.setOnClickListener {
+            findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(null))
         }
 
         viewModel.progressLiveData.observe(this.viewLifecycleOwner) { success ->

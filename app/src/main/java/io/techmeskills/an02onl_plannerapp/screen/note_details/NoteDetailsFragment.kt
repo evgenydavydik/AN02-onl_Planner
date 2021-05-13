@@ -20,13 +20,15 @@ import java.util.*
 class NoteDetailsFragment :
     NavigationFragment<FragmentNoteDetailsBinding>(R.layout.fragment_note_details) {
 
-    private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private val dateFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
     override val viewBinding: FragmentNoteDetailsBinding by viewBinding()
 
     private val viewModel: NoteDetailsViewModel by viewModel()
 
     private val args: NoteDetailsFragmentArgs by navArgs()
+
+    private var selectedDate: Date = Date()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -37,15 +39,17 @@ class NoteDetailsFragment :
                         Note(
                             id = it.id, //при обновлении надо указать id, чтобы база знала что обновлять
                             title = viewBinding.etNote.text.toString(),
-                            date = dateFormatter.format(viewBinding.tvDate.getSelectedDate()),
-                            userName = it.userName
+                            date = dateFormatter.format(selectedDate),
+                            userName = it.userName,
+                            alarmEnabled = viewBinding.alarmSwitch.isChecked
                         )
                     )
                 } ?: kotlin.run { //если note == null, то это новая заметка, и мы ее добавляем
                     viewModel.addNewNote(
                         Note( //при добавлении id можно не указывать
                             title = viewBinding.etNote.text.toString(),
-                            date = dateFormatter.format(viewBinding.tvDate.getSelectedDate()),
+                            date = dateFormatter.format(selectedDate),
+                            alarmEnabled = viewBinding.alarmSwitch.isChecked,
                             userName = ""
                         )
                     )
@@ -58,8 +62,15 @@ class NoteDetailsFragment :
         }
 
         args.note?.let { note ->
+            viewBinding.alarmSwitch.isChecked = note.alarmEnabled
             viewBinding.etNote.setText(note.title)
-            viewBinding.tvDate.setSelectedDate(note.date)
+            selectedDate = dateFormatter.parse(note.date) ?: Date()
+            viewBinding.calendarView.selectDate(Calendar.getInstance().apply {
+                this.time = selectedDate
+            })
+        }
+        viewBinding.calendarView.addOnDateChangedListener { displayed, date ->
+            selectedDate = date
         }
     }
 

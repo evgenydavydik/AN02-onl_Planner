@@ -18,10 +18,11 @@ import kotlinx.parcelize.Parcelize
         onUpdate = CASCADE
     )]
 )
-open class Note(
+data class Note(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     val title: String,
     val date: String,
     val userName: String,
-    val fromCloud: Boolean = false
+    val fromCloud: Boolean = false,
+    val alarmEnabled: Boolean = false
 ) : Parcelable

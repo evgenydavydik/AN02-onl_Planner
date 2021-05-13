@@ -1,6 +1,8 @@
 package io.techmeskills.an02onl_plannerapp
 
+import android.app.AlarmManager
 import android.app.Application
+import android.content.Context
 import io.techmeskills.an02onl_plannerapp.cloud.ApiCloud
 import io.techmeskills.an02onl_plannerapp.database.DatabaseConstructor
 import io.techmeskills.an02onl_plannerapp.database.PlannerDatabase
@@ -8,6 +10,7 @@ import io.techmeskills.an02onl_plannerapp.datastore.AppSettings
 import io.techmeskills.an02onl_plannerapp.repositories.CloudRepository
 import io.techmeskills.an02onl_plannerapp.repositories.NotesRepository
 import io.techmeskills.an02onl_plannerapp.repositories.UsersRepository
+import io.techmeskills.an02onl_plannerapp.repository.NotificationRepository
 import io.techmeskills.an02onl_plannerapp.screen.login.LoginFragment
 import io.techmeskills.an02onl_plannerapp.screen.login.LoginViewModel
 import io.techmeskills.an02onl_plannerapp.screen.main.MainViewModel
@@ -23,7 +26,7 @@ class PlannerApp : Application() {
         super.onCreate()
         startKoin {
             androidContext(this@PlannerApp)
-            modules(listOf(viewModels, storageModule, repositoryModule, cloudModule))
+            modules(listOf(viewModels, storageModule, repositoryModule, cloudModule, systemModule))
         }
     }
 
@@ -41,11 +44,16 @@ class PlannerApp : Application() {
     }
     private val repositoryModule = module {
         factory { UsersRepository(get(), get(), get()) }
-        factory { NotesRepository(get(), get()) }
+        factory { NotesRepository(get(), get(), get()) }
         factory { CloudRepository(get(), get(), get()) }
+        factory { NotificationRepository(get(), get()) }
     }
 
     private val cloudModule = module {
         factory { ApiCloud.get() }
+    }
+
+    private val systemModule = module {
+        factory { get<Context>().getSystemService(Context.ALARM_SERVICE) as AlarmManager }
     }
 }

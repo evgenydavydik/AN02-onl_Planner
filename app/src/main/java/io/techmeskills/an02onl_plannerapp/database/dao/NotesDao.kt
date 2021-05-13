@@ -24,6 +24,9 @@ abstract class NotesDao {
     @Delete
     abstract fun deleteNotes(notes: List<Note>)
 
+    @Query("SELECT * FROM notes WHERE id == :noteId LIMIT 1")
+    abstract fun getNoteById(noteId: Long): Note?
+
     @Query("SELECT * FROM notes WHERE userName == :userName ORDER BY id DESC")
     abstract fun getAllNotesByUserId(userName: String): List<Note>
 

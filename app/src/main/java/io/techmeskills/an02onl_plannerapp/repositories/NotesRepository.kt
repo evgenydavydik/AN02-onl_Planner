@@ -3,24 +3,28 @@ package io.techmeskills.an02onl_plannerapp.repositories
 import io.techmeskills.an02onl_plannerapp.database.dao.NotesDao
 import io.techmeskills.an02onl_plannerapp.datastore.AppSettings
 import io.techmeskills.an02onl_plannerapp.models.Note
+import io.techmeskills.an02onl_plannerapp.repository.NotificationRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 
-class NotesRepository(private val notesDao: NotesDao, private val appSettings: AppSettings) {
+class NotesRepository(
+    private val notesDao: NotesDao,
+    private val appSettings: AppSettings,
+    private val notificationRepository: NotificationRepository
+) {
 
     val currentNotesFlow: Flow<List<Note>> = appSettings.userNameFlow()
         .flatMapLatest { userName -> notesDao.getCurrentNotesLiveFlow(userName) }
 
     suspend fun saveNote(note: Note) {
         withContext(Dispatchers.IO) {
-            notesDao.saveNote(
-                Note(
-                    title = note.title,
-                    date = note.date,
-                    userName = appSettings.userName()
-                )
+            val id = notesDao.saveNote(
+                note.copy(userName = appSettings.userName())
             )
+            if (note.alarmEnabled) {
+                notificationRepository.setNotification(note.copy(id = id))
+            }
         }
     }
 
@@ -37,12 +41,23 @@ class NotesRepository(private val notesDao: NotesDao, private val appSettings: A
     suspend fun saveNotes(notes: List<Note>) {
         withContext(Dispatchers.IO) {
             notesDao.saveNotes(notes)
+            notes.forEach {
+                if (it.alarmEnabled) {
+                    notificationRepository.setNotification(it)
+                }
+            }
         }
     }
 
     suspend fun updateNote(note: Note) {
         withContext(Dispatchers.IO) {
+            notesDao.getNoteById(note.id)?.let { oldNote ->
+                notificationRepository.unsetNotification(oldNote)
+            }
             notesDao.updateNote(note)
+            if (note.alarmEnabled) {
+                notificationRepository.setNotification(note)
+            }
         }
     }
 
@@ -66,7 +81,28 @@ class NotesRepository(private val notesDao: NotesDao, private val appSettings: A
 
     suspend fun deleteNote(note: Note) {
         withContext(Dispatchers.IO) {
+            notificationRepository.unsetNotification(note)
             notesDao.deleteNote(note)
+        }
+    }
+
+    suspend fun deleteNoteById(noteId: Long) {
+        withContext(Dispatchers.IO) {
+            notesDao.getNoteById(noteId)?.let {
+                notificationRepository.unsetNotification(it)
+                notesDao.deleteNote(it)
+            }
+        }
+    }
+
+    suspend fun postponeNoteById(noteId: Long) {
+        withContext(Dispatchers.IO) {
+            notesDao.getNoteById(noteId)?.let { note ->
+                notificationRepository.unsetNotification(note)
+                val postponedNote = notificationRepository.postponeNoteTimeByFiveMins(note)
+                notesDao.updateNote(postponedNote)
+                notificationRepository.setNotification(postponedNote)
+            }
         }
     }
 }

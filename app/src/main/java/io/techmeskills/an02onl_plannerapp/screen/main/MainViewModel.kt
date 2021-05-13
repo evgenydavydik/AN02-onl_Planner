@@ -24,9 +24,7 @@ class MainViewModel(
 ) : CoroutineViewModel() {
 
     val progressLiveData = MutableLiveData<Boolean>()
-    val notesLiveData = notesRepository.currentNotesFlow.flowOn(Dispatchers.IO).map {
-        listOf(AddNewNote) + it
-    }.flowOn(Dispatchers.IO).asLiveData()
+    val notesLiveData = notesRepository.currentNotesFlow.asLiveData()
 
     fun deleteNote(note: Note) {
         launch {
@@ -56,8 +54,6 @@ class MainViewModel(
         progressLiveData.postValue(result)
     }
 }
-
-object AddNewNote : Note(-1, "", "", "")
 
 
 
