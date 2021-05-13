@@ -23,11 +23,8 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
     private val viewModel: MainViewModel by viewModel()
 
     private val adapter = NotesRecyclerViewAdapter(
-            onClick = ::onItemClick,
-            onDelete = ::onItemDelete,
-            onAddNew = {
-                findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(null))
-            }
+        onClick = ::onItemClick,
+        onDelete = ::onItemDelete
     )
 
     private fun onItemClick(note: Note) {
@@ -53,12 +50,16 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(viewBinding.recyclerView)
 
-        viewBinding.btLogout.setOnClickListener {
-            viewModel.logout()
-            findNavController().navigateSafe(MainFragmentDirections.toLoginFragment())
-        }
         viewBinding.ivCloud.setOnClickListener {
             showCloudDialog()
+        }
+
+        viewBinding.ivSettings.setOnClickListener {
+            showSettingsDialog()
+        }
+
+        viewBinding.addNote.setOnClickListener {
+            findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(null))
         }
 
         viewModel.progressLiveData.observe(this.viewLifecycleOwner) { success ->
@@ -68,6 +69,23 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             }
             viewBinding.progressIndicator.isVisible = false
         }
+    }
+
+    private fun showSettingsDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.settings_request_title)
+            .setMessage(R.string.setting_action)
+            .setPositiveButton(R.string.action_logout) { dialog, _ ->
+                viewBinding.progressIndicator.isVisible = true
+                viewModel.logout()
+                dialog.cancel()
+                findNavController().navigateSafe(MainFragmentDirections.toLoginFragment())
+            }.setNegativeButton(R.string.action_delete_user) { dialog, _ ->
+                viewBinding.progressIndicator.isVisible = true
+                viewModel.deleteUser()
+                dialog.cancel()
+                findNavController().navigateSafe(MainFragmentDirections.toLoginFragment())
+            }.show()
     }
 
     private fun showCloudDialog() {

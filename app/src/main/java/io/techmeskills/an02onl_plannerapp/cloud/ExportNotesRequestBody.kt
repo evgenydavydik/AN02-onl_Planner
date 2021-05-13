@@ -14,10 +14,6 @@ class ExportNotesRequestBody(
 )
 
 class CloudUser(
-
-    @SerializedName("id")
-    val userId: Long,
-
     @SerializedName("name")
     val userName: String
 )

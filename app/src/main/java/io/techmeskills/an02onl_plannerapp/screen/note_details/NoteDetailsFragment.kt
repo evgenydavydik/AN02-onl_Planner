@@ -18,9 +18,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class NoteDetailsFragment :
-        NavigationFragment<FragmentNoteDetailsBinding>(R.layout.fragment_note_details) {
+    NavigationFragment<FragmentNoteDetailsBinding>(R.layout.fragment_note_details) {
 
-    private val dateFormatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private val dateFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
     override val viewBinding: FragmentNoteDetailsBinding by viewBinding()
 
@@ -28,37 +28,49 @@ class NoteDetailsFragment :
 
     private val args: NoteDetailsFragmentArgs by navArgs()
 
+    private var selectedDate: Date = Date()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         viewBinding.confirm.setOnClickListener {
             if (viewBinding.etNote.text.isNotBlank()) {
                 args.note?.let { //если note != null, то это обновление заметки
                     viewModel.updateNote(
-                            Note(
-                                    id = it.id, //при обновлении надо указать id, чтобы база знала что обновлять
-                                    title = viewBinding.etNote.text.toString(),
-                                    date = dateFormatter.format(viewBinding.tvDate.getSelectedDate()),
-                                    userId = it.userId
-                            )
+                        Note(
+                            id = it.id, //при обновлении надо указать id, чтобы база знала что обновлять
+                            title = viewBinding.etNote.text.toString(),
+                            date = dateFormatter.format(selectedDate),
+                            userName = it.userName,
+                            alarmEnabled = viewBinding.alarmSwitch.isChecked
+                        )
                     )
                 } ?: kotlin.run { //если note == null, то это новая заметка, и мы ее добавляем
                     viewModel.addNewNote(
-                            Note( //при добавлении id можно не указывать
-                                    title = viewBinding.etNote.text.toString(),
-                                    date = dateFormatter.format(viewBinding.tvDate.getSelectedDate())
-                            )
+                        Note( //при добавлении id можно не указывать
+                            title = viewBinding.etNote.text.toString(),
+                            date = dateFormatter.format(selectedDate),
+                            alarmEnabled = viewBinding.alarmSwitch.isChecked,
+                            userName = ""
+                        )
                     )
                 }
                 findNavController().popBackStack()
             } else {
                 Toast.makeText(requireContext(), " Please, enter your note", Toast.LENGTH_LONG)
-                        .show()
+                    .show()
             }
         }
 
         args.note?.let { note ->
+            viewBinding.alarmSwitch.isChecked = note.alarmEnabled
             viewBinding.etNote.setText(note.title)
-            viewBinding.tvDate.setSelectedDate(note.date)
+            selectedDate = dateFormatter.parse(note.date) ?: Date()
+            viewBinding.calendarView.selectDate(Calendar.getInstance().apply {
+                this.time = selectedDate
+            })
+        }
+        viewBinding.calendarView.addOnDateChangedListener { displayed, date ->
+            selectedDate = date
         }
     }
 

@@ -8,6 +8,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @Entity(tableName = "users")
 open class User(
-        @PrimaryKey(autoGenerate = true) val id: Long = 0L,
+        @PrimaryKey
         val name: String
 ) : Parcelable
