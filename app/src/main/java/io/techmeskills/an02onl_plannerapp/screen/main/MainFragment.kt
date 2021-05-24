@@ -12,13 +12,14 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
+import io.techmeskills.an02onl_plannerapp.databinding.TestBinding
 import io.techmeskills.an02onl_plannerapp.models.Note
 import io.techmeskills.an02onl_plannerapp.support.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_main) {
+class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
 
-    override val viewBinding: FragmentMainBinding by viewBinding()
+    override val viewBinding: TestBinding by viewBinding()
 
     private val viewModel: MainViewModel by viewModel()
 
@@ -67,7 +68,7 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
                 Toast.makeText(requireContext(), R.string.cloud_failed, Toast.LENGTH_LONG)
                     .show()
             }
-            viewBinding.progressIndicator.isVisible = false
+            //viewBinding.progressIndicator.isVisible = false
         }
     }
 
@@ -76,12 +77,12 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             .setTitle(R.string.settings_request_title)
             .setMessage(R.string.setting_action)
             .setPositiveButton(R.string.action_logout) { dialog, _ ->
-                viewBinding.progressIndicator.isVisible = true
+                //viewBinding.progressIndicator.isVisible = true
                 viewModel.logout()
                 dialog.cancel()
                 findNavController().navigateSafe(MainFragmentDirections.toLoginFragment())
             }.setNegativeButton(R.string.action_delete_user) { dialog, _ ->
-                viewBinding.progressIndicator.isVisible = true
+                //viewBinding.progressIndicator.isVisible = true
                 viewModel.deleteUser()
                 dialog.cancel()
                 findNavController().navigateSafe(MainFragmentDirections.toLoginFragment())
@@ -93,11 +94,11 @@ class MainFragment : NavigationFragment<FragmentMainBinding>(R.layout.fragment_m
             .setTitle(R.string.cloud_request_title)
             .setMessage(R.string.pick_action)
             .setPositiveButton(R.string.action_import) { dialog, _ ->
-                viewBinding.progressIndicator.isVisible = true
+                //viewBinding.progressIndicator.isVisible = true
                 viewModel.importNotes()
                 dialog.cancel()
             }.setNegativeButton(R.string.action_export) { dialog, _ ->
-                viewBinding.progressIndicator.isVisible = true
+                //viewBinding.progressIndicator.isVisible = true
                 viewModel.exportNotes()
                 dialog.cancel()
             }.show()
