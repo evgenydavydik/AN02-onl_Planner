@@ -21,7 +21,7 @@ import kotlinx.parcelize.Parcelize
 data class Note(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     val title: String,
-    val date: String,
+    val date: Long,
     val userName: String,
     val fromCloud: Boolean = false,
     val alarmEnabled: Boolean = false

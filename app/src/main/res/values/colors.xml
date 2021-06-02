@@ -8,8 +8,17 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#fafafa</color>
-    <color name="blue">#000080</color>
     <color name="silver">#C0C0C0</color>
-    <color name="deep_sky_blue">#00BFFF</color>
     <color name="royal_blue">#4169E1</color>
+
+    //цвета радуги
+    <color name="red">#FF0000</color>
+    <color name="orange">#ffa500</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="green">#008000</color>
+    <color name="deep_sky_blue">#00BFFF</color>
+    <color name="blue">#0000ff</color>
+    <color name="purple">#5A009D</color>
+
+
 </resources>

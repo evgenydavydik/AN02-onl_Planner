@@ -16,6 +16,8 @@ import io.techmeskills.an02onl_plannerapp.databinding.TestBinding
 import io.techmeskills.an02onl_plannerapp.models.Note
 import io.techmeskills.an02onl_plannerapp.support.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
 
@@ -27,6 +29,8 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
         onClick = ::onItemClick,
         onDelete = ::onItemDelete
     )
+
+    val dayFormatter = SimpleDateFormat("dd EEE", Locale.getDefault())
 
     private fun onItemClick(note: Note) {
         findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(note))
