@@ -29,7 +29,7 @@
         android:id="@+id/mainFragment"
         android:name="io.techmeskills.an02onl_plannerapp.screen.main.MainFragment"
         android:label="MainFragment"
-        tools:layout="@layout/fragment_main">
+        tools:layout="@layout/test">
         <action
             android:id="@+id/toNoteDetails"
             app:destination="@+id/noteDetailsFragment" />

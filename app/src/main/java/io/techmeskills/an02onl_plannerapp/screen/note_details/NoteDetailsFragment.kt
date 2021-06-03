@@ -2,7 +2,6 @@ package io.techmeskills.an02onl_plannerapp.screen.note_details
 
 import android.os.Bundle
 import android.view.View
-import android.widget.DatePicker
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.navigation.fragment.findNavController
@@ -11,6 +10,7 @@ import by.kirich1409.viewbindingdelegate.viewBinding
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.databinding.FragmentNoteDetailsBinding
 import io.techmeskills.an02onl_plannerapp.models.Note
+import io.techmeskills.an02onl_plannerapp.support.DatePickerView
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
 import io.techmeskills.an02onl_plannerapp.support.setVerticalMargin
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -28,7 +28,7 @@ class NoteDetailsFragment :
 
     private val args: NoteDetailsFragmentArgs by navArgs()
 
-    private var selectedDate: Date = Date()
+    private var selectedDate: Calendar = Calendar.getInstance().apply { time = Date() }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -39,7 +39,7 @@ class NoteDetailsFragment :
                         Note(
                             id = it.id, //при обновлении надо указать id, чтобы база знала что обновлять
                             title = viewBinding.etNote.text.toString(),
-                            date = dateFormatter.format(selectedDate),
+                            date = selectedDate.timeInMillis,
                             userName = it.userName,
                             alarmEnabled = viewBinding.alarmSwitch.isChecked
                         )
@@ -48,7 +48,7 @@ class NoteDetailsFragment :
                     viewModel.addNewNote(
                         Note( //при добавлении id можно не указывать
                             title = viewBinding.etNote.text.toString(),
-                            date = dateFormatter.format(selectedDate),
+                            date = selectedDate.timeInMillis,
                             alarmEnabled = viewBinding.alarmSwitch.isChecked,
                             userName = ""
                         )
@@ -64,44 +64,27 @@ class NoteDetailsFragment :
         args.note?.let { note ->
             viewBinding.alarmSwitch.isChecked = note.alarmEnabled
             viewBinding.etNote.setText(note.title)
-            selectedDate = dateFormatter.parse(note.date) ?: Date()
-            viewBinding.calendarView.selectDate(Calendar.getInstance().apply {
-                this.time = selectedDate
-            })
+            selectedDate = Calendar.getInstance().apply { time = Date(note.date) }
+            viewBinding.calendarView.selectedDate = selectedDate.time
         }
-        viewBinding.calendarView.addOnDateChangedListener { displayed, date ->
-            selectedDate = date
-        }
-    }
-
-    private fun DatePicker.getSelectedDate(): Date {
-        val calendar = Calendar.getInstance(Locale.getDefault())
-        calendar.set(Calendar.YEAR, this.year)
-        calendar.set(Calendar.MONTH, this.month)
-        calendar.set(Calendar.DAY_OF_MONTH, this.dayOfMonth)
-        calendar.set(Calendar.HOUR, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        return calendar.time
-    }
-
-    private fun DatePicker.setSelectedDate(date: String?) {
-        date?.let {
-            dateFormatter.parse(it)?.let { date ->
-                val calendar = Calendar.getInstance(Locale.getDefault())
-                calendar.time = date
-                val year = calendar.get(Calendar.YEAR)
-                val month = calendar.get(Calendar.MONTH)
-                val day = calendar.get(Calendar.DAY_OF_MONTH)
-                this.updateDate(year, month, day)
+        viewBinding.calendarView.onDateChangeCallback = object : DatePickerView.DateChangeListener {
+            override fun onDateChanged(date: Date) {
+                val hour = selectedDate.get(Calendar.HOUR_OF_DAY)
+                val minutes = selectedDate.get(Calendar.MINUTE)
+                selectedDate.time = date
+                selectedDate.set(Calendar.HOUR_OF_DAY, hour)
+                selectedDate.set(Calendar.MINUTE, minutes)
             }
+        }
+        viewBinding.timePicker.setOnTimeChangedListener { timePicker, hour, minutes ->
+            selectedDate.set(Calendar.HOUR_OF_DAY, hour)
+            selectedDate.set(Calendar.MINUTE, minutes)
         }
     }
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
         viewBinding.toolbar.setVerticalMargin(marginTop = top)
-        viewBinding.confirm.setVerticalMargin(marginBottom = bottom * 11 / 10)
+        viewBinding.confirm.setVerticalMargin(marginBottom = bottom * 1 / 18)
     }
 
     override val backPressedCallback: OnBackPressedCallback
