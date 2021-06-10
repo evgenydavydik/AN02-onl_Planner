@@ -14,7 +14,8 @@ class NotesRepository(
     private val notificationRepository: NotificationRepository
 ) {
 
-    val currentNotesFlow: Flow<List<Note>> = appSettings.userNameFlow()
+    private var click = 0
+    var currentNotesFlow: Flow<List<Note>> = appSettings.userNameFlow()
         .flatMapLatest { userName -> notesDao.getCurrentNotesLiveFlow(userName) }
 
     suspend fun saveNote(note: Note) {
@@ -35,6 +36,42 @@ class NotesRepository(
     suspend fun setAllNotesSyncWithCloud() {
         withContext(Dispatchers.IO) {
             notesDao.setAllNotesSyncWithCloud()
+        }
+    }
+
+    suspend fun sortNotesByTitle() {
+        withContext(Dispatchers.IO) {
+
+            if (click == 0) {
+                currentNotesFlow = appSettings.userNameFlow().flatMapLatest { userName ->
+                    notesDao.getCurrentNotesLiveFlowSortNotesTitleDesc(userName)
+                }
+                click += 1
+            } else {
+                currentNotesFlow = appSettings.userNameFlow().flatMapLatest { userName ->
+                    notesDao.getCurrentNotesLiveFlowSortNotesTitleAsc(userName)
+                }
+                click -= 1
+            }
+
+        }
+    }
+
+    suspend fun sortNotesByDate() {
+        withContext(Dispatchers.IO) {
+
+            if (click == 0) {
+                currentNotesFlow = appSettings.userNameFlow().flatMapLatest { userName ->
+                    notesDao.getCurrentNotesLiveFlowSortNotesDateDesc(userName)
+                }
+                click += 1
+            } else {
+                currentNotesFlow = appSettings.userNameFlow().flatMapLatest { userName ->
+                    notesDao.getCurrentNotesLiveFlowSortNotesDateAsc(userName)
+                }
+                click -= 1
+            }
+
         }
     }
 

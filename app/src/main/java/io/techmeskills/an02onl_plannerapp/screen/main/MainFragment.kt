@@ -70,6 +70,20 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
             findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(null))
         }
 
+        viewBinding.sort.setOnClickListener {
+            viewModel.sortNotes()
+            viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
+                adapter.submitList(it)
+            }
+        }
+
+        viewBinding.sortDate.setOnClickListener {
+            viewModel.sortNotesDate()
+            viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
+                adapter.submitList(it)
+            }
+        }
+
         viewBinding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextSubmit(query: String): Boolean {

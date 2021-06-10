@@ -24,7 +24,7 @@ class MainViewModel(
 ) : CoroutineViewModel() {
 
     val progressLiveData = MutableLiveData<Boolean>()
-    val notesLiveData = notesRepository.currentNotesFlow.asLiveData()
+    var notesLiveData = notesRepository.currentNotesFlow.asLiveData()
 
     fun deleteNote(note: Note) {
         launch {
@@ -35,6 +35,20 @@ class MainViewModel(
     fun logout() {
         launch {
             usersRepository.logout()
+        }
+    }
+
+    fun sortNotes(){
+        launch {
+            notesRepository.sortNotesByTitle()
+            notesLiveData = notesRepository.currentNotesFlow.asLiveData()
+        }
+    }
+
+    fun sortNotesDate(){
+        launch {
+            notesRepository.sortNotesByDate()
+            notesLiveData = notesRepository.currentNotesFlow.asLiveData()
         }
     }
 

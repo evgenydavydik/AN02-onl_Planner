@@ -57,6 +57,22 @@
                     android:scaleType="center"
                     android:src="@drawable/ic_cloud" />
 
+                <ImageView
+                    android:id="@+id/sort"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_gravity="start"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_baseline_sort_by_alpha_24" />
+
+                <ImageView
+                    android:id="@+id/sortDate"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_gravity="start"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_sort" />
+
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
