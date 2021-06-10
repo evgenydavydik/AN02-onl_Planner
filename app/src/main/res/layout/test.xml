@@ -57,9 +57,31 @@
                     android:scaleType="center"
                     android:src="@drawable/ic_cloud" />
 
+                <ImageView
+                    android:id="@+id/sort"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_gravity="start"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_baseline_sort_by_alpha_24" />
+
+                <ImageView
+                    android:id="@+id/sortDate"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_gravity="start"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_sort" />
+
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <SearchView
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:queryHint="Search note" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -69,13 +91,13 @@
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/search"
         app:spanCount="2"
         tools:listitem="@layout/note_list_item" />
 

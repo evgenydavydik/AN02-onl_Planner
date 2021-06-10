@@ -33,6 +33,18 @@ abstract class NotesDao {
     @Query("SELECT * FROM notes where userName==:userName ORDER BY id DESC")
     abstract fun getCurrentNotesLiveFlow(userName: String): Flow<List<Note>>
 
+    @Query("SELECT * FROM notes where userName==:userName ORDER BY title DESC")
+    abstract fun getCurrentNotesLiveFlowSortNotesTitleDesc(userName: String): Flow<List<Note>>
+
+    @Query("SELECT * FROM notes where userName==:userName ORDER BY title ASC")
+    abstract fun getCurrentNotesLiveFlowSortNotesTitleAsc(userName: String): Flow<List<Note>>
+
+    @Query("SELECT * FROM notes where userName==:userName ORDER BY date ASC")
+    abstract fun getCurrentNotesLiveFlowSortNotesDateAsc(userName: String): Flow<List<Note>>
+
+    @Query("SELECT * FROM notes where userName==:userName ORDER BY date DESC")
+    abstract fun getCurrentNotesLiveFlowSortNotesDateDesc(userName: String): Flow<List<Note>>
+
     @Query("UPDATE notes SET fromCloud = 1")
     abstract fun setAllNotesSyncWithCloud()
 }

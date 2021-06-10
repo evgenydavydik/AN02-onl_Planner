@@ -2,6 +2,7 @@ package io.techmeskills.an02onl_plannerapp.screen.main
 
 import android.os.Bundle
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
@@ -15,6 +16,8 @@ import io.techmeskills.an02onl_plannerapp.databinding.FragmentMainBinding
 import io.techmeskills.an02onl_plannerapp.databinding.TestBinding
 import io.techmeskills.an02onl_plannerapp.models.Note
 import io.techmeskills.an02onl_plannerapp.support.*
+import okhttp3.internal.notify
+import okhttp3.internal.notifyAll
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -66,6 +69,33 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
         viewBinding.addNote.setOnClickListener {
             findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(null))
         }
+
+        viewBinding.sort.setOnClickListener {
+            viewModel.sortNotes()
+            viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
+                adapter.submitList(it)
+            }
+        }
+
+        viewBinding.sortDate.setOnClickListener {
+            viewModel.sortNotesDate()
+            viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
+                adapter.submitList(it)
+            }
+        }
+
+        viewBinding.search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+                adapter.filter.filter(query)
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                adapter.filter.filter(s)
+                return true
+            }
+        })
 
         viewModel.progressLiveData.observe(this.viewLifecycleOwner) { success ->
             if (success.not()) {
