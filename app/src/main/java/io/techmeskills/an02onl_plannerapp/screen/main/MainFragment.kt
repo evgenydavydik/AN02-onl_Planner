@@ -47,7 +47,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding.recyclerView.adapter = adapter
         viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
-            adapter.submitList(it)
+            adapter.setNewList(it.toMutableList())
         }
 
         val swipeHandler = object : SwipeToDeleteCallback(this.requireContext()) {
@@ -73,14 +73,14 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
         viewBinding.sort.setOnClickListener {
             viewModel.sortNotes()
             viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
-                adapter.submitList(it)
+                adapter.setNewList(it.toMutableList())
             }
         }
 
         viewBinding.sortDate.setOnClickListener {
             viewModel.sortNotesDate()
             viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
-                adapter.submitList(it)
+                adapter.setNewList(it.toMutableList())
             }
         }
 

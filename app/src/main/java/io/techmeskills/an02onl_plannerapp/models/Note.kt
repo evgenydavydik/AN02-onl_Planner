@@ -23,6 +23,7 @@ data class Note(
     val title: String,
     val date: Long,
     val userName: String,
+    val colorNote: String,
     val fromCloud: Boolean = false,
     val alarmEnabled: Boolean = false
 ) : Parcelable

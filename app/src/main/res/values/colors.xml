@@ -12,6 +12,17 @@
     <color name="royal_blue">#4169E1</color>
 
     //цвета радуги
+
+    <string-array name="rainbow">
+        <item>#FF0000</item>
+        <item>#ffa500</item>
+        <item>#FFFF00</item>
+        <item>#008000</item>
+        <item>#00BFFF</item>
+        <item>#0000ff</item>
+        <item>#5A009D</item>
+    </string-array>
+
     <color name="red">#FF0000</color>
     <color name="orange">#ffa500</color>
     <color name="yellow">#FFFF00</color>

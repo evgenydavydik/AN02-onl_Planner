@@ -1,5 +1,6 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 import io.techmeskills.an02onl_plannerapp.R
 import io.techmeskills.an02onl_plannerapp.models.Note
 import java.text.SimpleDateFormat
@@ -18,13 +20,20 @@ import java.util.*
 
 class NotesRecyclerViewAdapter(
     private val onClick: (Note) -> Unit,
-    private val onDelete: (Note) -> Unit
-) : ListAdapter<Note, NotesRecyclerViewAdapter.NoteViewHolder>(NoteAdapterDiffCallback()),Filterable {
+    private val onDelete: (Note) -> Unit,
+    private var currentList: MutableList<Note> = mutableListOf()
+) : RecyclerView.Adapter<NotesRecyclerViewAdapter.NoteViewHolder>(), Filterable {
 
-    var noteFilterList: MutableList<Note>?
+    var noteFilterList: MutableList<Note>
 
     init {
         noteFilterList = currentList
+    }
+
+    fun setNewList(mutableList: MutableList<Note>) {
+        currentList = mutableList
+        noteFilterList = currentList
+        notifyDataSetChanged()
     }
 
 
@@ -38,29 +47,28 @@ class NotesRecyclerViewAdapter(
     )
 
     private fun onItemClick(position: Int) {
-        onClick(getItem(position))
+        onClick(noteFilterList[position])
     }
 
     private fun onItemDelete(position: Int) {
-        onDelete(getItem(position))
+        onDelete(noteFilterList[position])
     }
 
     override fun getItemCount(): Int {
-        return if (noteFilterList!!.isEmpty()) {
+        return if (noteFilterList.isEmpty()) {
             currentList.size
         } else {
-            noteFilterList!!.size
+            noteFilterList.size
         }
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        if (noteFilterList!!.isEmpty()) {
-            holder.bind(getItem(position))
+        if (noteFilterList.isEmpty()) {
+            holder.bind(currentList[position])
         } else {
-            holder.bind(noteFilterList!![position])
+            holder.bind(noteFilterList[position])
         }
     }
-
 
 
     inner class NoteViewHolder(
@@ -73,13 +81,15 @@ class NotesRecyclerViewAdapter(
         private val tvDate = itemView.findViewById<TextView>(R.id.tvDate)
         private val ivCloud = itemView.findViewById<ImageView>(R.id.ivCloud)
         private val ivAlarm = itemView.findViewById<ImageView>(R.id.ivAlarm)
+        private val card = itemView.findViewById<MaterialCardView>(R.id.card)
 
         init {
             itemView.setOnClickListener {
                 onItemClick(adapterPosition)
             }
             itemView.setOnLongClickListener {
-                onItemDelete(adapterPosition)
+                itemView.setBackgroundColor(Color.GREEN)
+                //onItemDelete(adapterPosition)
                 false
             }
         }
@@ -89,8 +99,10 @@ class NotesRecyclerViewAdapter(
             tvDate.text = dateFormatter.format(item.date)
             ivCloud.isVisible = item.fromCloud
             ivAlarm.isVisible = item.alarmEnabled
+            card.setCardBackgroundColor(Color.parseColor(item.colorNote))
         }
     }
+
     companion object {
         private val dateFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
     }
@@ -104,7 +116,9 @@ class NotesRecyclerViewAdapter(
                 } else {
                     val resultList = ArrayList<Note>()
                     for (note in currentList) {
-                        if (note.title.toLowerCase(Locale.ROOT).contains(charSearch.toLowerCase(Locale.ROOT))) {
+                        if (note.title.toLowerCase(Locale.ROOT)
+                                .contains(charSearch.toLowerCase(Locale.ROOT))
+                        ) {
                             resultList.add(note)
                         }
                     }

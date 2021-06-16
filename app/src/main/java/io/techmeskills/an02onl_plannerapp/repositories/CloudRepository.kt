@@ -42,7 +42,8 @@ class CloudRepository(
                 date = cloudNote.date,
                 userName = user.name,
                 fromCloud = true,
-                alarmEnabled = cloudNote.alarmEnabled
+                alarmEnabled = cloudNote.alarmEnabled,
+                colorNote = ""
             )
         }
         notesRepository.saveNotes(notesRepository.checkImportedNote(notes.toMutableList(), user.name))
