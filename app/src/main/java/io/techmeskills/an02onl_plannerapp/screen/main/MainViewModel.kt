@@ -32,20 +32,26 @@ class MainViewModel(
         }
     }
 
+    fun updateNote(note: Note) {
+        launch {
+            notesRepository.updateNote(note)
+        }
+    }
+
     fun logout() {
         launch {
             usersRepository.logout()
         }
     }
 
-    fun sortNotes(){
+    fun sortNotes() {
         launch {
             notesRepository.sortNotesByTitle()
             notesLiveData = notesRepository.currentNotesFlow.asLiveData()
         }
     }
 
-    fun sortNotesDate(){
+    fun sortNotesDate() {
         launch {
             notesRepository.sortNotesByDate()
             notesLiveData = notesRepository.currentNotesFlow.asLiveData()

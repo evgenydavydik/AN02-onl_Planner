@@ -51,7 +51,9 @@ class NoteDetailsFragment :
                             date = selectedDate.timeInMillis,
                             userName = it.userName,
                             alarmEnabled = viewBinding.alarmSwitch.isChecked,
-                            colorNote = colorNote
+                            colorNote = if (colorNote == "#FFFFFF") args.note!!.colorNote else colorNote,
+                            pin = args.note!!.pin
+
                         )
                     )
                 } ?: kotlin.run { //если note == null, то это новая заметка, и мы ее добавляем
@@ -105,7 +107,7 @@ class NoteDetailsFragment :
                     override fun onChooseColor(position: Int, color: Int) {
                         Log.d(
                             "positionColor",
-                            "" + position + " "+ arrayColor.get(position)
+                            "" + position + " " + arrayColor.get(position)
                         ) // will be fired only when OK button was tapped
                         colorNote = arrayColor[position]
                     }

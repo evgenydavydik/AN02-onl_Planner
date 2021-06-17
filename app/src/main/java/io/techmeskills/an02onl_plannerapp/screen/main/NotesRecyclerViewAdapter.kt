@@ -82,14 +82,14 @@ class NotesRecyclerViewAdapter(
         private val ivCloud = itemView.findViewById<ImageView>(R.id.ivCloud)
         private val ivAlarm = itemView.findViewById<ImageView>(R.id.ivAlarm)
         private val card = itemView.findViewById<MaterialCardView>(R.id.card)
+        private val ivPin = itemView.findViewById<ImageView>(R.id.ivPin)
 
         init {
             itemView.setOnClickListener {
                 onItemClick(adapterPosition)
             }
             itemView.setOnLongClickListener {
-                itemView.setBackgroundColor(Color.GREEN)
-                //onItemDelete(adapterPosition)
+                onItemDelete(adapterPosition)
                 false
             }
         }
@@ -99,6 +99,7 @@ class NotesRecyclerViewAdapter(
             tvDate.text = dateFormatter.format(item.date)
             ivCloud.isVisible = item.fromCloud
             ivAlarm.isVisible = item.alarmEnabled
+            ivPin.isVisible = item.pin
             card.setCardBackgroundColor(Color.parseColor(item.colorNote))
         }
     }

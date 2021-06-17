@@ -30,7 +30,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
 
     private val adapter = NotesRecyclerViewAdapter(
         onClick = ::onItemClick,
-        onDelete = ::onItemDelete
+        onDelete = ::onItemPin
     )
 
     val dayFormatter = SimpleDateFormat("dd EEE", Locale.getDefault())
@@ -41,6 +41,16 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
 
     private fun onItemDelete(note: Note) {
         viewModel.deleteNote(note)
+    }
+
+    private fun onItemPin(note: Note) {
+        if (!note.pin) {
+            note.pin = true
+            viewModel.updateNote(note)
+        } else {
+            note.pin = false
+            viewModel.updateNote(note)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
