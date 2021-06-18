@@ -1,5 +1,6 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
@@ -33,7 +34,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
         onDelete = ::onItemPin
     )
 
-    val dayFormatter = SimpleDateFormat("dd EEE", Locale.getDefault())
+    val dayFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
     private fun onItemClick(note: Note) {
         findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(note))
@@ -106,6 +107,17 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
                 return true
             }
         })
+
+        viewBinding.ivShare.setOnClickListener {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, viewModel.notesLiveData.value?.joinToString {
+                    it.title + " " +dayFormatter.format(it.date)
+                })
+                type = "text/plain"
+            }
+            startActivity(sendIntent)
+        }
 
         viewModel.progressLiveData.observe(this.viewLifecycleOwner) { success ->
             if (success.not()) {

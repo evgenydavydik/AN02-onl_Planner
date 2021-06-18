@@ -55,6 +55,7 @@ class MainViewModel(
         launch {
             notesRepository.sortNotesByDate()
             notesLiveData = notesRepository.currentNotesFlow.asLiveData()
+
         }
     }
 
