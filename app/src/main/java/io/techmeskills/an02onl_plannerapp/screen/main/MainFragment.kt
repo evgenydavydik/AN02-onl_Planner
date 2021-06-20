@@ -59,6 +59,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
         viewBinding.recyclerView.adapter = adapter
         viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
             adapter.setNewList(it.toMutableList())
+            adapter.filter.filter(viewBinding.search.query)
         }
 
         val swipeHandler = object : SwipeToDeleteCallback(this.requireContext()) {
@@ -85,6 +86,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
             viewModel.sortNotes()
             viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
                 adapter.setNewList(it.toMutableList())
+                adapter.filter.filter(viewBinding.search.query)
             }
         }
 
@@ -92,6 +94,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
             viewModel.sortNotesDate()
             viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
                 adapter.setNewList(it.toMutableList())
+                adapter.filter.filter(viewBinding.search.query)
             }
         }
 
@@ -112,7 +115,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT, viewModel.notesLiveData.value?.joinToString {
-                    it.title + " " +dayFormatter.format(it.date)
+                    it.title + " " + dayFormatter.format(it.date)
                 })
                 type = "text/plain"
             }
@@ -162,6 +165,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
         viewBinding.toolbar.setVerticalMargin(marginTop = top)
+        viewBinding.addNote.setVerticalMargin(marginBottom = bottom * 3 / 2)
         viewBinding.recyclerView.setPadding(0, 0, 0, bottom)
     }
 

@@ -20,7 +20,9 @@ class CloudRepository(
             CloudNote(
                 title = it.title,
                 date = it.date,
-                alarmEnabled = it.alarmEnabled
+                alarmEnabled = it.alarmEnabled,
+                noteColor = it.colorNote,
+                notePinned = it.pin
             )
         }
         val exportRequestBody =
@@ -43,10 +45,16 @@ class CloudRepository(
                 userName = user.name,
                 fromCloud = true,
                 alarmEnabled = cloudNote.alarmEnabled,
-                colorNote = ""
+                colorNote = cloudNote.noteColor,
+                pin = cloudNote.notePinned
             )
         }
-        notesRepository.saveNotes(notesRepository.checkImportedNote(notes.toMutableList(), user.name))
+        notesRepository.saveNotes(
+            notesRepository.checkImportedNote(
+                notes.toMutableList(),
+                user.name
+            )
+        )
         return response.isSuccessful
     }
 }

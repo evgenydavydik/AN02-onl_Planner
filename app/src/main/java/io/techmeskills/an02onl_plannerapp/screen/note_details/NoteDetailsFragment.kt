@@ -94,7 +94,7 @@ class NoteDetailsFragment :
             selectedDate.set(Calendar.MINUTE, minutes)
         }
         viewBinding.btnColor.setOnClickListener {
-            val colorPicker: ColorPicker = ColorPicker(context as Activity?)
+            val colorPicker = ColorPicker(context as Activity?)
             val colors = resources.getStringArray(R.array.rainbow)
             val arrayColor: ArrayList<String> = ArrayList()
             colors.map { arrayColor.add(it.toString()) }
@@ -110,6 +110,7 @@ class NoteDetailsFragment :
                             "" + position + " " + arrayColor.get(position)
                         ) // will be fired only when OK button was tapped
                         colorNote = arrayColor[position]
+                        viewBinding.btnColor.setBackgroundColor(color)
                     }
 
                     override fun onCancel() {}
@@ -121,7 +122,7 @@ class NoteDetailsFragment :
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
         viewBinding.toolbar.setVerticalMargin(marginTop = top)
-        viewBinding.confirm.setVerticalMargin(marginBottom = bottom * 1 / 18)
+        viewBinding.confirm.setVerticalMargin(marginBottom = bottom * 3 / 2)
     }
 
     override val backPressedCallback: OnBackPressedCallback
