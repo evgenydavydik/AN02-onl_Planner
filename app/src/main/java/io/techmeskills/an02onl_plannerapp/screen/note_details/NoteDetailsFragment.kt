@@ -99,7 +99,7 @@ class NoteDetailsFragment :
             val arrayColor: ArrayList<String> = ArrayList()
             colors.map { arrayColor.add(it.toString()) }
 
-            colorPicker.setDefaultColorButton(Color.parseColor("#f84c44"))
+            colorPicker.setDefaultColorButton(Color.parseColor(colorNote))
                 .setColors(arrayColor)
                 .setColumns(5)
                 .setRoundColorButton(true)
@@ -110,7 +110,9 @@ class NoteDetailsFragment :
                             "" + position + " " + arrayColor.get(position)
                         ) // will be fired only when OK button was tapped
                         colorNote = arrayColor[position]
-                        viewBinding.btnColor.setBackgroundColor(color)
+                        if (position==0)
+                        viewBinding.btnColor.setBackgroundColor(-1)
+                        else viewBinding.btnColor.setBackgroundColor(color)
                     }
 
                     override fun onCancel() {}
