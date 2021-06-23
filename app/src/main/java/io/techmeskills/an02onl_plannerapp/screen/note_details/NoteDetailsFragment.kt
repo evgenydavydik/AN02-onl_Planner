@@ -18,7 +18,6 @@ import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
 import io.techmeskills.an02onl_plannerapp.support.setVerticalMargin
 import org.koin.android.viewmodel.ext.android.viewModel
 import petrov.kristiyan.colorpicker.ColorPicker
-import petrov.kristiyan.colorpicker.ColorPicker.OnButtonListener
 import petrov.kristiyan.colorpicker.ColorPicker.OnChooseColorListener
 import java.text.SimpleDateFormat
 import java.util.*
@@ -51,7 +50,8 @@ class NoteDetailsFragment :
                             date = selectedDate.timeInMillis,
                             userName = it.userName,
                             alarmEnabled = viewBinding.alarmSwitch.isChecked,
-                            colorNote = if (colorNote == "#FFFFFF") args.note!!.colorNote else colorNote,
+                            colorNote = if (colorNote == "#FFFFFF")
+                                args.note!!.colorNote else colorNote,
                             pin = args.note!!.pin
 
                         )
@@ -95,11 +95,11 @@ class NoteDetailsFragment :
         }
         viewBinding.btnColor.setOnClickListener {
             val colorPicker = ColorPicker(context as Activity?)
-            val colors = resources.getStringArray(R.array.rainbow)
+            val colors = resources.getStringArray(R.array.colorsArray)
             val arrayColor: ArrayList<String> = ArrayList()
             colors.map { arrayColor.add(it.toString()) }
 
-            colorPicker.setDefaultColorButton(Color.parseColor(colorNote))
+            colorPicker.setDefaultColorButton(Color.parseColor(args.note?.colorNote ?: colorNote))
                 .setColors(arrayColor)
                 .setColumns(5)
                 .setRoundColorButton(true)
@@ -107,12 +107,9 @@ class NoteDetailsFragment :
                     override fun onChooseColor(position: Int, color: Int) {
                         Log.d(
                             "positionColor",
-                            "" + position + " " + arrayColor.get(position)
+                            "" + position + " " + arrayColor[position]
                         ) // will be fired only when OK button was tapped
                         colorNote = arrayColor[position]
-                        if (position==0)
-                        viewBinding.btnColor.setBackgroundColor(-1)
-                        else viewBinding.btnColor.setBackgroundColor(color)
                     }
 
                     override fun onCancel() {}

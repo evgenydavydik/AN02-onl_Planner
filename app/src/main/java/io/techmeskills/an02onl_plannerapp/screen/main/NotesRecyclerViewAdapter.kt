@@ -26,6 +26,8 @@ class NotesRecyclerViewAdapter(
 
     var noteFilterList: MutableList<Note>
 
+    var charSearch = ""
+
     init {
         noteFilterList = currentList
     }
@@ -55,7 +57,7 @@ class NotesRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int {
-        return if (noteFilterList.isEmpty()) {
+        return if (noteFilterList.isEmpty()&&charSearch=="") {
             currentList.size
         } else {
             noteFilterList.size
@@ -111,7 +113,7 @@ class NotesRecyclerViewAdapter(
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(constraint: CharSequence?): FilterResults {
-                val charSearch = constraint.toString()
+                charSearch = constraint.toString()
                 noteFilterList = if (charSearch.isEmpty()) {
                     currentList
                 } else {
@@ -148,4 +150,3 @@ class NoteAdapterDiffCallback : DiffUtil.ItemCallback<Note>() {
         return oldItem.date == newItem.date && oldItem.title == newItem.title && oldItem.fromCloud == newItem.fromCloud && oldItem.alarmEnabled == newItem.alarmEnabled
     }
 }
-

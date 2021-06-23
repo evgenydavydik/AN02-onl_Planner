@@ -13,6 +13,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_splash3"/>
+        android:src="@drawable/ic_launcher_note_24"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
