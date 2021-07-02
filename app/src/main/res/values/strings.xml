@@ -19,4 +19,5 @@
     <string name="action_delete_user">Delete user</string>
     <string name="cloud_failed">Failed to perform cloud operation</string>
     <string name="notify">Notify</string>
+    <string name="changeColor">Change color</string>
 </resources>

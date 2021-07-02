@@ -14,8 +14,8 @@ import retrofit2.http.Query
 interface ApiCloud {
     @GET("importNotes")
     suspend fun importNotes(
-            @Query("userName") userName: String,
-            @Query("phoneId") idPhone: String
+        @Query("userName") userName: String,
+        @Query("phoneId") idPhone: String,
     ): Response<List<CloudNote>>
 
     @POST("exportNotes")
@@ -25,14 +25,14 @@ interface ApiCloud {
         private const val API_URL = "https://us-central1-plannerapi-2d0bf.cloudfunctions.net"
 
         fun get(): ApiCloud = Retrofit.Builder().baseUrl(API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(
-                        OkHttpClient.Builder().apply {
-                            if (BuildConfig.DEBUG) {
-                                addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                            }
-                        }.build()
-                )
-                .build().create(ApiCloud::class.java)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(
+                OkHttpClient.Builder().apply {
+                    if (BuildConfig.DEBUG) {
+                        addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    }
+                }.build()
+            )
+            .build().create(ApiCloud::class.java)
     }
 }

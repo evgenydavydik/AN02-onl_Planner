@@ -11,10 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_margin="8dp"
+        android:alpha=".5"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="17dp"
         app:cardElevation="4dp"
-        android:alpha=".5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,6 +52,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="23.03.2021" />
+
             <ImageView
                 android:id="@+id/ivCloud"
                 android:layout_width="20dp"
@@ -60,7 +61,8 @@
                 android:src="@drawable/ic_cloud"
                 app:layout_constraintBottom_toBottomOf="@+id/tvDate"
                 app:layout_constraintEnd_toStartOf="@+id/tvDate"
-                app:layout_constraintTop_toTopOf="@+id/tvDate"/>
+                app:layout_constraintTop_toTopOf="@+id/tvDate" />
+
             <ImageView
                 android:id="@+id/ivAlarm"
                 android:layout_width="16dp"
@@ -72,6 +74,19 @@
                 app:layout_constraintBottom_toBottomOf="@+id/tvDate"
                 app:layout_constraintEnd_toStartOf="@+id/ivCloud"
                 app:layout_constraintTop_toTopOf="@+id/tvDate"
+                app:tint="@color/black"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/ivPin"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="4dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_baseline_push_pin_24"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="@+id/content"
+                app:layout_constraintTop_toTopOf="@+id/content"
                 app:tint="@color/black"
                 tools:visibility="visible" />
 

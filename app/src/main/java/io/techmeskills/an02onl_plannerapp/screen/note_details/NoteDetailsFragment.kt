@@ -1,6 +1,9 @@
 package io.techmeskills.an02onl_plannerapp.screen.note_details
 
+import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -14,8 +17,11 @@ import io.techmeskills.an02onl_plannerapp.support.DatePickerView
 import io.techmeskills.an02onl_plannerapp.support.NavigationFragment
 import io.techmeskills.an02onl_plannerapp.support.setVerticalMargin
 import org.koin.android.viewmodel.ext.android.viewModel
+import petrov.kristiyan.colorpicker.ColorPicker
+import petrov.kristiyan.colorpicker.ColorPicker.OnChooseColorListener
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class NoteDetailsFragment :
     NavigationFragment<FragmentNoteDetailsBinding>(R.layout.fragment_note_details) {
@@ -27,6 +33,8 @@ class NoteDetailsFragment :
     private val viewModel: NoteDetailsViewModel by viewModel()
 
     private val args: NoteDetailsFragmentArgs by navArgs()
+
+    private var colorNote = "#FFFFFF"
 
     private var selectedDate: Calendar = Calendar.getInstance().apply { time = Date() }
 
@@ -41,7 +49,11 @@ class NoteDetailsFragment :
                             title = viewBinding.etNote.text.toString(),
                             date = selectedDate.timeInMillis,
                             userName = it.userName,
-                            alarmEnabled = viewBinding.alarmSwitch.isChecked
+                            alarmEnabled = viewBinding.alarmSwitch.isChecked,
+                            colorNote = if (colorNote == "#FFFFFF")
+                                args.note!!.colorNote else colorNote,
+                            pin = args.note!!.pin
+
                         )
                     )
                 } ?: kotlin.run { //если note == null, то это новая заметка, и мы ее добавляем
@@ -50,7 +62,8 @@ class NoteDetailsFragment :
                             title = viewBinding.etNote.text.toString(),
                             date = selectedDate.timeInMillis,
                             alarmEnabled = viewBinding.alarmSwitch.isChecked,
-                            userName = ""
+                            userName = "",
+                            colorNote = colorNote
                         )
                     )
                 }
@@ -80,11 +93,35 @@ class NoteDetailsFragment :
             selectedDate.set(Calendar.HOUR_OF_DAY, hour)
             selectedDate.set(Calendar.MINUTE, minutes)
         }
+        viewBinding.btnColor.setOnClickListener {
+            val colorPicker = ColorPicker(context as Activity?)
+            val colors = resources.getStringArray(R.array.colorsArray)
+            val arrayColor: ArrayList<String> = ArrayList()
+            colors.map { arrayColor.add(it.toString()) }
+
+            colorPicker.setDefaultColorButton(Color.parseColor(args.note?.colorNote ?: colorNote))
+                .setColors(arrayColor)
+                .setColumns(5)
+                .setRoundColorButton(true)
+                .setOnChooseColorListener(object : OnChooseColorListener {
+                    override fun onChooseColor(position: Int, color: Int) {
+                        Log.d(
+                            "positionColor",
+                            "" + position + " " + arrayColor[position]
+                        ) // will be fired only when OK button was tapped
+                        colorNote = arrayColor[position]
+                    }
+
+                    override fun onCancel() {}
+                })
+                .show()
+        }
+
     }
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
         viewBinding.toolbar.setVerticalMargin(marginTop = top)
-        viewBinding.confirm.setVerticalMargin(marginBottom = bottom * 1 / 18)
+        viewBinding.confirm.setVerticalMargin(marginBottom = bottom * 3 / 2)
     }
 
     override val backPressedCallback: OnBackPressedCallback
@@ -94,3 +131,4 @@ class NoteDetailsFragment :
             }
         }
 }
+

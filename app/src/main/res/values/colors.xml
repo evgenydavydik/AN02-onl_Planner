@@ -10,6 +10,23 @@
     <color name="grey">#fafafa</color>
     <color name="silver">#C0C0C0</color>
     <color name="royal_blue">#4169E1</color>
+    <color name="lavender">#E6E6FA</color>
+    <color name="slateBlue">#6A5ACD</color>
+    <color name="darkSlateBlue">#483D8B</color>
+
+
+    <string-array name="colorsArray">
+        <item>#FFFFFF</item>
+        <item>#FF0000</item>
+        <item>#ffa500</item>
+        <item>#FFFF00</item>
+        <item>#008000</item>
+        <item>#00BFFF</item>
+        <item>#4169E1</item>
+        <item>#F0E68C</item>
+        <item>#EE82EE</item>
+        <item>#BDB76B</item>
+    </string-array>
 
     //цвета радуги
     <color name="red">#FF0000</color>

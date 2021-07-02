@@ -9,7 +9,7 @@
         android:id="@+id/main.appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/royal_blue"
+        android:background="@color/slateBlue"
         android:elevation="8dp"
         android:outlineProvider="@null"
         app:elevation="0dp">
@@ -27,13 +27,14 @@
 
             <ImageView
                 android:id="@+id/toolbar_image"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
+                android:layout_marginTop="45dp"
                 android:contentDescription="@null"
                 android:fitsSystemWindows="true"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_splash3" />
+                android:layout_gravity="center"
+                android:src="@drawable/ic_launcher_note_24" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -48,6 +49,15 @@
                     android:layout_gravity="end"
                     android:scaleType="center"
                     android:src="@drawable/ic_settings" />
+
+                <ImageView
+                    android:id="@+id/ivShare"
+                    android:layout_width="?attr/actionBarSize"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_gravity="end"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_baseline_share_24" />
+
 
                 <ImageView
                     android:id="@+id/ivCloud"
@@ -107,10 +117,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/royal_blue"
+        android:backgroundTint="@color/slateBlue"
         android:elevation="8dp"
         android:fontFamily="sans-serif-medium"
-        android:textColor="@color/white"
         android:textSize="16sp"
         app:icon="@drawable/ic_add"
         app:iconTint="@color/white"

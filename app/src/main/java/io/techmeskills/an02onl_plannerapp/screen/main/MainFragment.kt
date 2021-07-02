@@ -1,5 +1,6 @@
 package io.techmeskills.an02onl_plannerapp.screen.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.SearchView
@@ -30,10 +31,10 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
 
     private val adapter = NotesRecyclerViewAdapter(
         onClick = ::onItemClick,
-        onDelete = ::onItemDelete
+        onDelete = ::onItemPin
     )
 
-    val dayFormatter = SimpleDateFormat("dd EEE", Locale.getDefault())
+    val dayFormatter = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
 
     private fun onItemClick(note: Note) {
         findNavController().navigateSafe(MainFragmentDirections.toNoteDetails(note))
@@ -43,11 +44,22 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
         viewModel.deleteNote(note)
     }
 
+    private fun onItemPin(note: Note) {
+        if (!note.pin) {
+            note.pin = true
+            viewModel.updateNote(note)
+        } else {
+            note.pin = false
+            viewModel.updateNote(note)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewBinding.recyclerView.adapter = adapter
         viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
-            adapter.submitList(it)
+            adapter.setNewList(it.toMutableList())
+            adapter.filter.filter(viewBinding.search.query)
         }
 
         val swipeHandler = object : SwipeToDeleteCallback(this.requireContext()) {
@@ -73,14 +85,16 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
         viewBinding.sort.setOnClickListener {
             viewModel.sortNotes()
             viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
-                adapter.submitList(it)
+                adapter.setNewList(it.toMutableList())
+                adapter.filter.filter(viewBinding.search.query)
             }
         }
 
         viewBinding.sortDate.setOnClickListener {
             viewModel.sortNotesDate()
             viewModel.notesLiveData.observe(this.viewLifecycleOwner) {
-                adapter.submitList(it)
+                adapter.setNewList(it.toMutableList())
+                adapter.filter.filter(viewBinding.search.query)
             }
         }
 
@@ -96,6 +110,17 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
                 return true
             }
         })
+
+        viewBinding.ivShare.setOnClickListener {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, viewModel.notesLiveData.value?.joinToString {
+                    it.title + " " + dayFormatter.format(it.date)
+                })
+                type = "text/plain"
+            }
+            startActivity(sendIntent)
+        }
 
         viewModel.progressLiveData.observe(this.viewLifecycleOwner) { success ->
             if (success.not()) {
@@ -140,6 +165,7 @@ class MainFragment : NavigationFragment<TestBinding>(R.layout.test) {
 
     override fun onInsetsReceived(top: Int, bottom: Int, hasKeyboard: Boolean) {
         viewBinding.toolbar.setVerticalMargin(marginTop = top)
+        viewBinding.addNote.setVerticalMargin(marginBottom = bottom * 3 / 2)
         viewBinding.recyclerView.setPadding(0, 0, 0, bottom)
     }
 

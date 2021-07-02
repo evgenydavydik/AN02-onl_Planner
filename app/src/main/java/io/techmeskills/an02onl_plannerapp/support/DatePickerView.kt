@@ -98,6 +98,7 @@ class DatePickerView @JvmOverloads constructor(
 
         private val tvDay = itemView.findViewById<TextView>(R.id.tvDay)
         private val tvWeekDay = itemView.findViewById<TextView>(R.id.tvWeekDay)
+        private val tvMonth = itemView.findViewById<TextView>(R.id.tvMonth)
 
         init {
             itemView.setOnClickListener {
@@ -106,6 +107,7 @@ class DatePickerView @JvmOverloads constructor(
         }
 
         fun bind(date: Date, selected: Boolean) {
+            tvMonth.text = monthFormatter.format(date)
             tvDay.text = monthDayFormatter.format(date)
             tvWeekDay.text = dayFormatter.format(date)
 
@@ -117,11 +119,13 @@ class DatePickerView @JvmOverloads constructor(
 
             tvWeekDay.setTextColor(color)
             tvDay.setTextColor(color)
+            tvMonth.setTextColor(color)
         }
 
         companion object {
             val monthDayFormatter = SimpleDateFormat("dd", Locale.getDefault())
             val dayFormatter = SimpleDateFormat("EEE", Locale.getDefault())
+            val monthFormatter = SimpleDateFormat("MMM", Locale.getDefault())
         }
     }
 
